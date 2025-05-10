@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const users_routes = require("./routes/userRoutes");
-
+const products_routes = require("./routes/products");
 const app = express();
 const PORT = 6000;
 const DB = process.env.DB;
@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/users", users_routes);
-
+app.use("/api/products", products_routes);
 app.use((req, res) => {
   return res.status(404).json({
     status: 404,
