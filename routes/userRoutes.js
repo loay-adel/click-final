@@ -4,12 +4,17 @@ const {
   getAllUsers,
   getUserById,
   updateUser,
+  deleteUserById,
 } = require("../controllers/users");
 const { register , login } = require("../controllers/auth");
+const { authorize } = require("../middlewares/authorize.middelware");
+const verifyToken = require("../middlewares/verifyToken");
 
 router.get("/", getAllUsers);
 router.get("/:id", getUserById);
 router.put("/:id", updateUser);
+router.delete("/:id",verifyToken , authorize(['admin']) ,  deleteUserById);
 router.route("/register").post(register)
 router.route("/login").post(login)
+
 module.exports = router;
