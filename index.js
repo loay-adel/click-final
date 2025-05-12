@@ -40,7 +40,6 @@ async function main() {
     console.error("Database connection error:", err);
   }
 }
-console.log("useless comment for git to push");
 
 main();
 

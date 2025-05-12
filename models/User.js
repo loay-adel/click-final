@@ -24,27 +24,30 @@ const cartItemSchema = new mongoose.Schema({
   images: { type: [String], default: [] },
   tags: { type: [String], default: [] },
   quantity: { type: Number, default: 1, min: 1 },
-  subtotal: { type: Number, min: 0 }
+  subtotal: { type: Number, min: 0 },
 });
 
 // Schema for User
-const userSchema = new mongoose.Schema({
-  firstName: { type: String, required: true, trim: true },
-  lastName: { type: String, required: true, trim: true },
-  email: { type: String, required: true, unique: true, trim: true },
-  password: { type: String, required: true },
-  phone: { type: String, default: "", trim: true },
-  role: {
-    type: String,
-    enum: ["customer", "admin"],
-    default: "customer"
+const userSchema = new mongoose.Schema(
+  {
+    firstName: { type: String, required: true, trim: true },
+    lastName: { type: String, required: true, trim: true },
+    email: { type: String, required: true, unique: true, trim: true },
+    password: { type: String, required: true },
+    phone: { type: String, default: "", trim: true },
+    role: {
+      type: String,
+      enum: ["customer", "admin"],
+      default: "customer",
+    },
+    addresses: { type: [addressSchema], default: [] },
+    wishlist: { type: [String], default: [] },
+    cart: { type: [cartItemSchema], default: [] },
   },
-  addresses: { type: [addressSchema], default: [] },
-  wishlist: { type: [String], default: [] },
-  cart: { type: [cartItemSchema], default: [] }
-}, {
-  timestamps: true
-});
+  {
+    timestamps: true,
+  }
+);
 
 const User = mongoose.model("users", userSchema);
 module.exports = User;

@@ -29,11 +29,11 @@ const createProduct = async (req, res) => {
     image,
     category,
     discount,
-    availableCountity,
+    availableQuantity,
     tags,
   } = req.body;
 
-  if (!name || !description || !price || !category || !availableCountity) {
+  if (!name || !description || !price || !category || !availableQuantity) {
     res.status(400).json({ message: "All fields are required" });
   }
 
