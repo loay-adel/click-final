@@ -4,9 +4,8 @@ const jwt = require("jsonwebtoken");
 const userSchema = require("../models/User");
 
 const register = async (req, res) => {
-  // return res.status(200).json("Resister Done")
-  const { email, password, firstName, lastName } = req.body;
-  // console.log(email , password , name);
+  const { email, password, firstName, lastName, role } = req.body;
+
   if (!email || !password || !firstName || !lastName) {
     return res.status(400).json({
       status: 400,
@@ -15,8 +14,6 @@ const register = async (req, res) => {
   }
 
   const checkExistUser = await userSchema.findOne({ email });
-  console.log(checkExistUser);
-
   if (checkExistUser) {
     return res.status(409).json({
       status: 409,
@@ -25,22 +22,20 @@ const register = async (req, res) => {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  console.log(hashedPassword);
 
-  const registeredUser = await userSchema({
+  const registeredUser = new userSchema({
     firstName,
     lastName,
     email,
     password: hashedPassword,
+    role: role === "admin" ? "admin" : "customer", // أمان بسيط
   });
-
-  // console.log(registeredUser);
 
   await registeredUser.save();
 
   return res.status(201).json({
     status: 201,
-    data: { data: null, message: "user registerd success" },
+    data: { data: null, message: "user registered success" },
   });
 };
 

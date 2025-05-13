@@ -1,46 +1,51 @@
-const express = require("express");
 require("dotenv").config();
+const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const DB = process.env.DB;
+const PORT = process.env.PORT || 6000; // Keep original port
+const app = express();
 
+// Route files
 const users_routes = require("./routes/userRoutes");
 const products_routes = require("./routes/products");
-const app = express();
-const PORT = 6000;
-const DB = process.env.DB;
 
-app.use(cors());
-app.use(express.json());
-
-app.use("/api/users", users_routes);
-app.use("/api/products", products_routes);
-app.use((req, res) => {
-  return res.status(404).json({
-    status: 404,
-    message: "Route not found",
-  });
-});
-
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({
-    status: 500,
-    data: { data: null, message: "Internal server error" },
-  });
-});
-
-async function main() {
+// Database connection
+const connectDB = async () => {
   try {
     await mongoose.connect(DB);
-    console.log("Connected to MongoDB");
-    app.listen(PORT, () => {
-      console.log(`Listening on port: ${PORT}`);
-    });
+    console.log("MongoDB Connected");
+    console.log(`Connected to DB: ${mongoose.connection.db.databaseName}`);
   } catch (err) {
-    console.error("Database connection error:", err);
+    console.error("MongoDB Connection Error:", err);
+    process.exit(1);
   }
-}
+};
 
-main();
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
-module.exports = app;
+// Connect to DB first
+connectDB();
+
+// Mount routers
+app.use("/api/users", users_routes);
+app.use("/api/products", products_routes);
+
+// Error handling
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  if (err.name === "ValidationError") {
+    return res.status(400).json({
+      message: "Validation failed",
+      errors: Object.values(err.errors).map((e) => e.message),
+    });
+  }
+  res.status(500).json({ message: "Internal server error" });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
