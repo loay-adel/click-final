@@ -43,7 +43,6 @@ const updateUser = async (req, res) => {
     res.status(500).json({ message: "Server Error", error: err.message });
   }
 };
-
 const updateUserPartially = async (req, res) => {
   try {
     const updates = { ...req.body };
