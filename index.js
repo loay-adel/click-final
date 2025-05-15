@@ -23,7 +23,7 @@ const connectDB = async () => {
 };
 
 const corsOptions = {
-  origin: "http://localhost:3000", "https://gioco-rx7d.vercel.app",
+  origin: ["http://localhost:3000", "https://gioco-rx7d.vercel.app"],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   credentials: true,
 };
