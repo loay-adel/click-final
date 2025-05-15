@@ -4,6 +4,7 @@ const {
   getAllUsers,
   getUserById,
   updateUser,
+  updateUserPatrtially,
   deleteUserById,
 } = require("../controllers/users");
 const { register, login } = require("../controllers/auth");
@@ -15,6 +16,7 @@ const verifyToken = require("../middlewares/verifyToken");
 
 router.get("/", getAllUsers);
 router.get("/:id", getUserById);
+router.patch("/:id", updateUserPatrtially);
 router.put("/:id", updateUser);
 // routes/userRoutes.js
 router.delete("/:id", verifyToken, authorize(["admin"]), deleteUserById);

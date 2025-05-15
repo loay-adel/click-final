@@ -34,6 +34,22 @@ const updateUser = async (req, res) => {
     res.status(500).json({ message: "Server Error", error: err.message });
   }
 };
+const updateUserPatrtially = async (req, res) => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser)
+      return res.status(404).json({ message: "User not found" });
+
+    res.json(updatedUser);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 const deleteUserById = async (req, res) => {
   try {
     const deletedUser = await User.findByIdAndDelete(req.params.id);
@@ -48,5 +64,6 @@ module.exports = {
   getAllUsers,
   getUserById,
   updateUser,
+  updateUserPatrtially,
   deleteUserById,
 };
