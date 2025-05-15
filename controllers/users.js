@@ -43,24 +43,16 @@ const updateUser = async (req, res) => {
     res.status(500).json({ message: "Server Error", error: err.message });
   }
 };
-const updateUserPartially = async (req, res) => {
+const updateUserPatrtially = async (req, res) => {
   try {
-    const updates = { ...req.body };
-
-    // Handle password hashing if password is being updated
-    if (updates.password) {
-      updates.password = await bcrypt.hash(updates.password, 10);
-    }
-
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
-      { $set: updates },
+      { $set: req.body },
       { new: true, runValidators: true }
     );
 
-    if (!updatedUser) {
+    if (!updatedUser)
       return res.status(404).json({ message: "User not found" });
-    }
 
     res.json(updatedUser);
   } catch (err) {
