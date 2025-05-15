@@ -9,7 +9,7 @@ const app = express();
 // Route files
 const users_routes = require("./routes/userRoutes");
 const products_routes = require("./routes/products");
-
+const order_routes = require("./routes/order");
 // Database connection
 const connectDB = async () => {
   try {
@@ -39,7 +39,7 @@ connectDB();
 // Mount routers
 app.use("/api/users", users_routes);
 app.use("/api/products", products_routes);
-
+app.use("/api/orders", order_routes);
 // Error handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
