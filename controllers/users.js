@@ -43,6 +43,7 @@ const updateUser = async (req, res) => {
     res.status(500).json({ message: "Server Error", error: err.message });
   }
 };
+
 const updateUserPatrtially = async (req, res) => {
   try {
     const updatedUser = await User.findByIdAndUpdate(

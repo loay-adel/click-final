@@ -12,7 +12,6 @@ const addressSchema = new mongoose.Schema({
 
 // Schema for Cart Item
 const cartItemSchema = new mongoose.Schema({
-  id: { type: String, required: true },
   title: { type: String, trim: true },
   description: { type: String, trim: true },
   image: { type: String, default: "" },
