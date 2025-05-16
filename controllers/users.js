@@ -1,5 +1,6 @@
 const User = require("../models/User");
-
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 //  Get all users
 const getAllUsers = async (req, res) => {
   try {
@@ -24,16 +25,25 @@ const getUserById = async (req, res) => {
 // Update user
 const updateUser = async (req, res) => {
   try {
-    const updated = await User.findByIdAndUpdate(req.params.id, req.body, {
+    const request = { ...req.body };
+
+    if (request.password) {
+      request.password = await bcrypt.hash(request.password, 10);
+    }
+
+    const updated = await User.findByIdAndUpdate(req.params.id, request, {
       new: true,
       runValidators: true,
     });
+
     if (!updated) return res.status(404).json({ message: "User not found" });
+
     res.status(200).json(updated);
   } catch (err) {
     res.status(500).json({ message: "Server Error", error: err.message });
   }
 };
+
 const updateUserPatrtially = async (req, res) => {
   try {
     const updatedUser = await User.findByIdAndUpdate(
@@ -60,6 +70,7 @@ const deleteUserById = async (req, res) => {
     res.status(500).json({ message: "Server Error", error: err.message });
   }
 };
+
 module.exports = {
   getAllUsers,
   getUserById,
