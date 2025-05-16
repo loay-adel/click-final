@@ -22,25 +22,47 @@ const getProductByCategory = async (req, res) => {
 };
 
 const createProduct = async (req, res) => {
-  const {
-    name,
-    description,
-    price,
-    image,
-    category,
-    discount,
-    availableQuantity,
-    tags,
-  } = req.body;
+  try {
+    const {
+      title,
+      description,
+      price,
+      thumbnail,
+      images,
+      category,
+      discount,
+      availableQuantity,
+      tags,
+    } = req.body;
 
-  if (!name || !description || !price || !category || !availableQuantity) {
-    res.status(400).json({ message: "All fields are required" });
+    // تحقق من الحقول المطلوبة
+    if (!title || !description || !price || !category || !availableQuantity) {
+      return res
+        .status(400)
+        .json({ message: "All required fields must be filled." });
+    }
+
+    const product = await Product.create({
+      title,
+      description,
+      price,
+      thumbnail,
+      images,
+      category,
+      discount,
+      availableQuantity,
+      tags,
+    });
+
+    res.status(201).json({ message: "Product added successfully", product });
+  } catch (error) {
+    console.error("Error creating product:", error);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
-
-  const product = await Product.create(req.body);
-
-  res.status(201).json({ message: "Product added successfully", product });
 };
+
 const deleteProduct = async (req, res) => {
   const { id } = req.params;
 
