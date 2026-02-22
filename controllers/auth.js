@@ -49,7 +49,6 @@ const login = async (req, res) => {
     });
   }
   const loggedUser = await userSchema.findOne({ email });
-  // console.log(loggedUser);
   if (!loggedUser) {
     return res.status(400).json({
       status: 400,
@@ -63,7 +62,7 @@ const login = async (req, res) => {
       data: { data: null, message: "Wrong Password" },
     });
   }
-  console.log(checkPassword);
+
   const token = await jwt.sign(
     {
       email,
@@ -72,9 +71,8 @@ const login = async (req, res) => {
       role: loggedUser.role,
       _id: loggedUser._id,
     },
-    process.env.ACCESS_TOKEN_SECRET
+    process.env.jsonwebtoken
   );
-  console.log(token);
   return res.status(200).json({
     status: 200,
     data: { data: token, message: "login successful" },

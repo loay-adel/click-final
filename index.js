@@ -2,8 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const DB = process.env.DB;
-const PORT =  6000; 
+const DB = process.env.MONGODB_URI;
+const PORT =  process.env.PORT; 
 const app = express();
 
 // Route files
@@ -12,7 +12,7 @@ const products_routes = require("./routes/products");
 
 // Database connection
 const connectDB = async () => {
-  try {
+  try {    
     await mongoose.connect(DB);
     console.log("MongoDB Connected");
     console.log(`Connected to DB: ${mongoose.connection.db.databaseName}`);
